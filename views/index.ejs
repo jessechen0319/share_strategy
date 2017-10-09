@@ -1,11 +1,60 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title>
+    <%= title %>
+  </title>
+  <link rel='stylesheet' href='/stylesheets/index.css' />
+  <link rel="stylesheet" href="/stylesheets/common.css">
+  <script src="/javascripts/vue.js"></script>
+  <script src="/javascripts/fetch.js"></script>
+</head>
+
+<body>
+  <div class="main-panel">
+    <div class="top-title">
+
+    </div>
+    <div class="body-content">
+      <div class="left-folder">
+        <tree-view :tree="tree"></tree-view>
+      </div>
+      <script>
+        Vue.component('tree-view', {
+          template: '<span> {{JSON.stringify(tree)}} </span>',
+          props:{tree:[]}
+        });
+
+        let leftFolder = new Vue({
+          el: ".left-folder",
+          data: {
+            tree: []
+          },
+          methods: {
+            fetchTree: function () {//fetch tree from server
+              fetch('/tree').then(function (response) {
+                return response.json()
+              }).then((json) =>{
+                this.tree = json;
+              }).catch(function (ex) {
+                console.log('parsing failed', ex)
+              })
+            }
+          },
+          computed: {
+
+          }
+        });
+
+        leftFolder.fetchTree();
+      </script>
+      <div class="main-content">
+
+      </div>
+    </div>
+
+  </div>
+</body>
+
 </html>

@@ -1,0 +1,34 @@
+.main-panel {
+    width: 100%;
+    height: 100%;
+    background: gray;
+    position: relative;
+}
+
+.top-title {
+    width: 100%;
+    position: relative;
+    height: 5rem;
+    background: lightseagreen;
+}
+
+.body-content {
+    position: relative;
+    width: 100%;
+    bottom: 0px;
+    background: lightgreen;
+    height: calc(100% - (5rem));
+    display: flex;
+}
+
+.left-folder {
+    flex: 1;
+    background: lightcoral;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.main-content {
+    flex: 5;
+    background: lightgoldenrodyellow;
+}
