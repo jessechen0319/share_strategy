@@ -1,3 +1,9 @@
 [
-    {"name":"根目录", "isFolder": true, "root": true, "id":1}
+    {"name":"根目录", "isFolder": true, "root": true, "id":1, "folderLevel":1},
+    {"name":"瑞祥", "isFolder": true, "root": false, "id":2, "folderLevel":2, "parent": 1},
+    {"name":"圣民", "isFolder": true, "root": false, "id":3, "folderLevel":2, "parent": 1},
+    {"name":"德江", "isFolder": true, "root": false, "id":4, "folderLevel":2, "parent": 1},
+    {"name":"瑞祥子选项", "isFolder": false, "root": false, "id":5, "folderLevel":3, "parent": 2},
+    {"name":"瑞祥子选项", "isFolder": true, "root": false, "id":6, "folderLevel":3, "parent": 2}
+
 ]

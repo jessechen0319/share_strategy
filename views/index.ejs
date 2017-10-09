@@ -18,28 +18,75 @@
     </div>
     <div class="body-content">
       <div class="left-folder">
-        <tree-view :tree="tree"></tree-view>
+        <tree-view @findchild="findItemsByParent" @backtoupper="backToUpper" :tree="tree"></tree-view>
       </div>
       <script>
         Vue.component('tree-view', {
-          template: '<span> {{JSON.stringify(tree)}} </span>',
-          props:{tree:[]}
+          template: '<div class="tree-panel"> <div style="cursor:pointer" @click="backToUpperFolder()" >../</div> <div style="cursor:pointer" v-for="treeItem in tree"><span @click="findItemsByParent(treeItem)"> {{treeItem.name}} </span> <div v-if="treeItem.isFolder" style="display:inline-block; cursor:pointer">+</div></div></div>',
+          props:{tree:Array},
+          methods:{
+            findItemsByParent:function(item){
+              if(item.isFolder){
+                this.$emit('findchild', item);
+              }
+            },
+            backToUpperFolder: function(){
+              this.$emit('backtoupper');
+            }
+          }
         });
 
         let leftFolder = new Vue({
           el: ".left-folder",
           data: {
-            tree: []
+            tree: [],
+            folderLevel: 1,
+            fullTreeSet: [],
+            clickedItem:{}
           },
           methods: {
             fetchTree: function () {//fetch tree from server
               fetch('/tree').then(function (response) {
                 return response.json()
               }).then((json) =>{
-                this.tree = json;
+                this.fullTreeSet = json;
+                this.folderLevel = 1;
+                this.tree = [];
+                this.tree.push(this.findRootFolder());
               }).catch(function (ex) {
                 console.log('parsing failed', ex)
               })
+            },
+
+            findRootFolder: function(){
+              return this.fullTreeSet.find((item, index)=>{
+                return item.folderLevel ==1;
+              });
+            },
+
+            findItemsByParent: function(item){
+              this.clickedItem = item;
+              if(item.isFolder){
+                this.tree = this.fullTreeSet.filter((itemOfSet, index)=>{
+                  return itemOfSet.parent == item.id;
+                });
+              }
+            },
+            backToUpper: function(){
+              if(this.tree[0]&&this.tree[0].folderLevel == 1){//root folder will not return to upper
+                  
+              } else {
+                if(this.clickedItem.folderLevel == 1){
+                  this.tree = [];
+                  this.tree.push(this.findRootFolder());
+                } else {
+                  let parentItem = this.fullTreeSet.find((item)=>{
+                    return item.id == this.clickedItem.parent;
+                  });
+                  this.clickedItem = parentItem;
+                  this.findItemsByParent(parentItem);
+                }
+              }
             }
           },
           computed: {
@@ -50,7 +97,6 @@
         leftFolder.fetchTree();
       </script>
       <div class="main-content">
-
       </div>
     </div>
 
